@@ -1,0 +1,179 @@
+<!DOCTYPE html> 
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <title>Описание - Платформа анализа уч.объектов аспирантов</title> 
+    <link rel="stylesheet" href="../css/jquery.mobile-1.4.2.min.css" />
+    <script src="../js/jquery-1.10.2.min.js"></script>
+    <script src="../js/jquery.mobile-1.4.2.min.js"></script>
+    <script src="../js/xapiwrapper.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/verbs.js"></script>
+    <script src="../js/functions.js"></script>
+</head> 
+
+<body data-chapter="01-intro">
+
+<div data-role="page" id="p1">
+
+    <div data-role="header">
+        <a href="../index.html#list" name="home" data-role="button" data-theme="b" data-icon="home" data-transition="slide" data-ajax="false" class="ui-btn-left">Главная</a>
+        <h1>Руководство пользователя</h1>
+    </div><!-- /header -->
+
+    <div data-role="content">    
+        <div class="infoblock">
+            <h2>Руководство пользователя</h2>
+        </div>
+
+        
+
+
+ <h3>Руководство по технологии взаимодействия с xAPI </h3>
+		
+<p>Рассмотрим пример простейшей html страницы, на которой Вы в данный момент находитесь.
+</p> <p>Для красивости интерфейса использована библиотека <a href="http://www.jquerymobile.com">[jQuery Mobile]</a>, которая в совокупности с фреймворком <a href="https://github.com/adlnet/xAPIWrapper">[xAPIWrapper]</a> отправляет и получает данные из Learning Record Store (LRS).</p>
+
+<p>Библиотека функций (<a href="../js/functions.js">js/functions.js</a>) обеспечивает передачу параметров из html страницы в соответствующие обработчики событий, учитывая при этом и результаты изменения страницы.</p>
+<p>Аналогично будет вести себя и библиотека функций страницы Теста <a href="../js/quiz-functions.js">[quiz-functions.js]</a>, при этом в ней лишь добавлены дополнительные соответствующие обработчики событий.</p>
+
+<h3>Конфигурация приложений</h3>
+
+<p>Все настройки доступа к платформе прописаны в файле <a href="../js/config.js">[config.js]</a>. Вы должны отредактировать его с учетом данных полученых при регистрации на <a href="https://vu.elsu.ru/xapi">https://vu.elsu.ru/xapi</a>*</p>
+<h5>* - на момент написания курса использована LRS от Американской ассоциации ADL, но если Вы заинтересованы в установке LRS на  вузовский сервер, то я готов это обсудить по <a href="mailto:vvvvvvvvvv@inbox.ru">email</a>.</h5>
+<p>Вы также можете зарегистрироваться на (http://lrs.adlnet.gov), если Вас не пугают существующие для РФ ограничения.</p>
+<p>Например, в моем случае регистрация произведена со следующими данными
+
+<br>
+```js
+<ul>
+<li>Config.endpoint = "https://lrs.adlnet.gov/xapi/";</li>
+<li>Config.user = "Andropov";</li>
+<li>Config.password = "6106168846";</li>
+
+</ul>
+```</p>
+
+
+
+<h3>Локальные переменные</h3>
+
+<p>После успешной регистрации будут переданы переменные storageKeyName и storageKeyEmail, в файле <a href="../js/config.js">[config.js]</a>  они заданы следующим образом<br>
+```js
+
+<ul>
+<li>var storageKeyName = ".../name";</li>
+<li>var storageKeyEmail = ".../email";</li>
+	
+</ul>
+````
+
+<h3>Глобальные переменные</h3>
+
+<p>Мы можем использовать их для передачи констант в масштабе всего курса, в файле <a href="../js/config.js">[config.js]</a>  они заданы следующим образом<br>
+```js
+
+<ul>
+<li>var moduleID = "http://vu.elsu.ru/course/";</li>
+<li>var moduleName = "How to Make xapi Course"</li>
+	
+</ul>
+````
+<h5>Не забывайте указывать эти данные в своих приложениях для учета авторских прав.</h5>
+
+
+<h3>События</h3>
+
+Для учета событий с вашего сайта (http://example.com) обработчик будет выглядеть так, как он представлен например в файле <a href="../js/verbs.js">[verbs.js]</a>.
+
+<br>
+
+```js
+<blockquote>(function(ADL){<br>
+   ADL.custom = {<br>
+      "verbs": {<br>
+         "read" : {<br>
+            "id" : "http://example.com/xapi/verbs/read",<br>
+            "display" : {"en-US" : "read"}<br>
+         },<br>
+         "checked" : {<br>
+            "id" : "http://example.com/xapi/verbs/checked",<br>
+            "display" : {"en-US" : "checked"}<br>
+         },<br>
+         "unchecked" : {<br>
+            "id" : "http://example.com/xapi/verbs/unchecked",<br>
+            "display" : {"en-US" : "unchecked"}<br>
+         }           <br>
+      }   <br>
+   };<br>
+}(window.ADL = window.ADL || {}));</blockquote>
+```
+
+<h3>Обработка событий для HTML страницы</h3>
+
+Рассмотрим два обработчика посещаемых страниц
+<ul>
+	<li>data-chapter</li>
+	<li>data-role</li>
+</ul>.
+
+
+ <em>data-chapter</em> выдаёт для LRS текущую страницу, которая была просмотрена пользователем:
+<blockquote>
+```html<br>
+body data-chapter="steps"<br>
+```</blockquote>
+
+ <em>data-role</em> выдаёт для LRS элемент текущей страницы, который был просмотрен пользователем:
+
+<blockquote>```html<br>
+div data-role="page" id="p2"<br>
+  Текст<br>
+/div<br>
+```</blockquote>
+
+
+<h3>API Статических данных</h3>
+
+Посредством <a href="https://github.com/adlnet/xAPI-Spec/blob/master/xAPI.md#stateapi">[State API]</a> мы публикуем статические данные в LRS, такие как текущая страница и элемент страницы .
+
+
+
+<h3>API Динамических данных</h3>
+
+<p>Чтобы отразить такие данные, как например тесты, мы используем соот. блоки данных с выбором элемента:
+</p>
+<ul>
+<li>- Checklist (множественный выбор)</li>
+<li>- Radio (бинарный выбор)</li>
+<li>- Text Box (текстовое сравнение)</li>
+	
+</ul>
+
+<h3>Теперь мы предлагаем Вам продолжить обучение в соответствии с планом курса:</h3>
+
+        <ul>
+            <li>1. Руководство пользователя xAPI</li>
+            <li>2. Оценка остаточных знаний</li>
+            <li>3. Шаги по реализации</li>
+            <li>4. Видеоинструкции</li>
+            <li>5. Проверка знаний</li>
+        </ul>
+
+    </div><!-- /content -->
+    
+    <div data-role="footer" data-theme="b" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                <li><a href="../index.html#list" data-theme="b" data-rel="back" data-icon="carat-l" data-iconpos="top" data-transition="slide" data-direction="reverse" data-ajax="false">Назад</a></li>
+                <li><a href="../index.html#list" id="next" data-theme="b" data-icon="carat-r" data-iconpos="top" data-transition="slide" data-ajax="false" onclick="setChapterComplete()">Вперед</a></li>
+            </ul>
+        </div><!-- /navbar -->
+    </div><!-- /footer -->
+
+</div><!-- /page p1 -->
+
+</body>
+</html>
