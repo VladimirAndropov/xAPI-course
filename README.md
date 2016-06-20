@@ -4,7 +4,7 @@
 
 Курс бесплатный
 
-выложен на vu.elsu.ru/course
+выложен на http://vladimirandropov.github.io/xAPI-course
 
 создан для ознакомления с возможностями API
 
